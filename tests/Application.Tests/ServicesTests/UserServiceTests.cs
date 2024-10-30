@@ -6,7 +6,7 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
 using Moq;
 
-namespace Application.Tests;
+namespace Application.Tests.ServicesTests;
 
 public class UserServiceTests
 {

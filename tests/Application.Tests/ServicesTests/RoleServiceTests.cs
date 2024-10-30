@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Moq;
 
 
-namespace Application.Tests;
+namespace Application.Tests.ServicesTests;
 public class RoleServiceTests
 {
     private readonly Mock<RoleManager<IdentityRole<Guid>>> _roleManagerMock;
