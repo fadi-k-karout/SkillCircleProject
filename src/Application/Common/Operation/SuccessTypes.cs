@@ -5,6 +5,7 @@ public enum SuccessTypes
 		Created,
 		Updated,
 		Deleted,
+		NotModified,
 		Success
 }
 

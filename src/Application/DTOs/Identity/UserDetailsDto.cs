@@ -9,7 +9,7 @@ namespace Application.DTOs.Identity
 		public string? LastName { get; set; }
 		public  string UserName { get; set; }
 		public  string Email { get; set; }
-
+        public string? PhotoUrl {get; set;}
 
 		// Constructor to create UserDetailsDto from ApplicationUser
 		public UserDetailsDto(User user)

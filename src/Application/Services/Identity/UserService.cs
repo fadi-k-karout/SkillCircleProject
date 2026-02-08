@@ -90,6 +90,7 @@ namespace Application.Services.Identity
 
 		public async Task<OperationResult<UserDetailsDto>> GetUserDetailsAsync(string userId)
 		{
+			
 			var user = await _userManager.FindByIdAsync(userId);
 			if (user == null || user.IsActive == false)
 			{

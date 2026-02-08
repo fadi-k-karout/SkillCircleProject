@@ -25,27 +25,33 @@ namespace Application.Services.Identity
 			var user = await _userManager.FindByEmailAsync(email);
 			if (user is null)
 				return OperationResult<LoginResponseDto>.AuthenticationError();
-			
-			var passwordValid = await _userManager.CheckPasswordAsync(user, password);
-			if(!passwordValid)
-				return OperationResult<LoginResponseDto>.AuthenticationError();
-			
+    
 			var error = await PreSignInCheck(user);
 			if (error is not null)
 				return OperationResult<LoginResponseDto>.Failure(error, ErrorType.BadRequest);
-			
-			
+    
+			var passwordValid = await _userManager.CheckPasswordAsync(user, password);
+			if (!passwordValid)
+			{
+				// Increment the access failed count for the user
+				await _userManager.AccessFailedAsync(user);
+        
+				return OperationResult<LoginResponseDto>.AuthenticationError();
+			}
+
+			// Reset failed access count upon successful login
+			await _userManager.ResetAccessFailedCountAsync(user);
 
 			var userId = user.Id.ToString();
+    
 			// Generate JWT token
 			var roles = await _userManager.GetRolesAsync(user);
-			var token = _tokenGenerator.GenerateToken(userId, user.UserName, roles.ToList());
-			
+			var token = _tokenGenerator.GenerateToken(userId,  roles.ToList());
+    
 			var dto = new LoginResponseDto
 			{
 				UserId = userId,
 				Token = token,
-
 			};
 
 			return OperationResult<LoginResponseDto>.Success(dto);
@@ -59,6 +65,7 @@ namespace Application.Services.Identity
 				// Create user if it doesn't exist
 				var email = info.Principal?.FindFirstValue(ClaimTypes.Email);
 				var firstName = info.Principal?.FindFirstValue(ClaimTypes.GivenName);
+				
 				if (email.IsNullOrEmpty() || firstName.IsNullOrEmpty())
 					return OperationResult<LoginResponseDto>
 						   .Failure("External login failure, missing required claims");
@@ -85,7 +92,7 @@ namespace Application.Services.Identity
 			 // Generate JWT token
 	
 			 var roles = await _userManager.GetRolesAsync(user) ?? new List<string>(); // Ensure roles is not null;
-		     var token = _tokenGenerator.GenerateToken(user.Id.ToString(), user.UserName, roles.ToList());
+		     var token = _tokenGenerator.GenerateToken(user.Id.ToString(),  roles.ToList());
 		     var dto = new LoginResponseDto
 		     {
 			     UserId = user.Id.ToString(),
@@ -112,7 +119,7 @@ namespace Application.Services.Identity
 			}
 
 			// Check if the user needs to confirm their email
-			if (!_userManager.IsEmailConfirmedAsync(user).Result)
+			if (!await _userManager.IsEmailConfirmedAsync(user))
 			{
 				return "Email not confirmed.";
 			}

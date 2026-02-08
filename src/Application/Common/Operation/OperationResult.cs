@@ -8,12 +8,13 @@ namespace Application.Common.Operation
 
 		public bool IsSuccess { get; set; }
 		public string ErrorMessage { get; set; }
-		public ErrorType? ErrorType { get; set; } // Add nullable ErrorType
+		public ErrorType? ErrorType { get; set; } 
 		public Dictionary<string, string[]> ValidationErrors { get; set; }
+		public SuccessTypes? SuccessType { get; set; }
 
 
-		public static OperationResult Success() => new OperationResult { IsSuccess = true };
-
+		public static OperationResult Success(SuccessTypes? successType = null) => new OperationResult { IsSuccess = true, SuccessType = successType };
+     
 		public static OperationResult Failure(string errorMessage, ErrorType errorType = InternalServerError)
 		{
 			return new OperationResult { IsSuccess = false, ErrorMessage = errorMessage, ErrorType = errorType };
@@ -25,6 +26,7 @@ namespace Application.Common.Operation
 
 			return Failure(errorMessage, NotFound);
 		}
+		
 
 		public static OperationResult ArgumentNullError(string argumentName)
 		{

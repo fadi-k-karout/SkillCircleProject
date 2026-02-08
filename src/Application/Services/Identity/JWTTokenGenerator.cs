@@ -17,17 +17,15 @@ public class JwtTokenGenerator : ITokenGenerator
      
     }
     
-    public string GenerateToken(string userId, string userName, IList<string> roles)
+    public string GenerateToken(string userId, IList<string> roles)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
         var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>()
         {
-            new Claim(JwtRegisteredClaimNames.Sub, userName),
-            new Claim(JwtRegisteredClaimNames.Jti, userId),
-            new Claim(ClaimTypes.Name, userName),
-            new Claim("UserId", userId)
+            new Claim(JwtRegisteredClaimNames.Sub, userId),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
@@ -41,9 +39,6 @@ public class JwtTokenGenerator : ITokenGenerator
         );
 
         var encodedToken = new JwtSecurityTokenHandler().WriteToken(token);
-        // Use conditional logging based on environment or level
-
-        
    
         return encodedToken;
     }

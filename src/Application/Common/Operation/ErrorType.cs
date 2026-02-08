@@ -9,6 +9,6 @@
 		Forbidden,
 		Conflict,
 		BadRequest,
-		// Add other error types as needed
+	
 	}
 

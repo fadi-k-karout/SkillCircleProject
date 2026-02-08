@@ -2,6 +2,7 @@
 using Application.Common.Operation;
 using Application.DTOs.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Identity
 {
@@ -48,7 +49,7 @@ namespace Application.Services.Identity
 			try
 			{
 				// Fetch roles as entities first
-				var roles =  _roleManager.Roles.ToList();
+				var roles = await  _roleManager.Roles.ToListAsync();
 
 				// Map the roles to RoleDto
 				var roleDtos = roles.Select(role => new RoleDto(role)).ToList();
