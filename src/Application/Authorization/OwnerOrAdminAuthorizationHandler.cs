@@ -6,7 +6,7 @@ public class OwnerOrAdminHandler : AuthorizationHandler<OwnerOrAdminRequirement>
 {
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, OwnerOrAdminRequirement requirement)
     {
-        var userId = context.User.FindFirst("UserId")?.Value;
+        var userId = context.User.FindFirst("sub")?.Value;
         var resourceOwnerId =  context.Resource as string; 
 
         if (context.User.IsInRole("Admin") || userId == resourceOwnerId)
