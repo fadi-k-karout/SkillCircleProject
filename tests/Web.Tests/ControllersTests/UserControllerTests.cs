@@ -2,12 +2,17 @@ using System.Security.Claims;
 using Application.Common.Interfaces;
 using Application.Common.Operation;
 using Application.DTOs.Identity;
+using Application.Services.Identity;
+using Microsoft.Extensions.Configuration;
 using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using FluentAssertions;
+using MapsterMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Web.Controllers.Identity;
+using Web.Templates;
 
 namespace Web.Tests.ControllersTests;
 
@@ -16,12 +21,21 @@ public class UserControllerTests
     private readonly UserController _controller;
     private readonly Mock<IUserService> _userServiceMock;
     private readonly Mock<IAuthorizationService> _authorizationServiceMock;
-
-    public UserControllerTests()
+    private readonly Mock<EmailService> _emailServiceMock;
+    private readonly Mock<UserManager<User>> _userManagerMock;
+    private readonly Mock<IConfiguration> _configurationMock;
+    private readonly Mock<RazorEmailRenderer> _razorEmailRendererMock;
+    public UserControllerTests(Mock<RazorEmailRenderer> razorEmailRendererMock)
     {
+        _razorEmailRendererMock = new Mock<RazorEmailRenderer>() ;
         _userServiceMock = new Mock<IUserService>();
         _authorizationServiceMock = new Mock<IAuthorizationService>();
-        _controller = new UserController(_userServiceMock.Object, _authorizationServiceMock.Object);
+        _emailServiceMock = new Mock<EmailService>();
+        _userManagerMock = new Mock<UserManager<User>>();
+        _configurationMock = new Mock<IConfiguration>();
+        
+        _controller = new UserController(_userServiceMock.Object, _authorizationServiceMock.Object,
+            _userManagerMock.Object, _emailServiceMock.Object, _configurationMock.Object, _razorEmailRendererMock.Object);
     }
 
     [Fact]

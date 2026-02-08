@@ -5,6 +5,8 @@ using Domain.Models;
 using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
 using Moq;
+// ReSharper disable NullableWarningSuppressionIsUsed
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
 
 namespace Application.Tests.ServicesTests;
 
@@ -18,7 +20,8 @@ public class UserServiceTests
     {
         _userManagerMock = new Mock<UserManager<User>>(
             new Mock<IUserStore<User>>().Object,
-            null, null, null, null, null, null, null, null
+            // ReSharper disable once NullableWarningSuppressionIsUsed
+            null!, null!, null!, null!, null!, null!, null!, null!
         );
 
         // Setup the IMapper mock
@@ -31,51 +34,55 @@ public class UserServiceTests
     [Fact]
     public async Task CreateUserAsync_ShouldReturnSuccess_WhenUserIsCreated()
     {
+        // Arrange
         var dto = new CreateUserDto        
         { 
+            // ReSharper disable once StringLiteralTypo
             UserName = "testuser",
             Email = "test@example.com", 
             FirstName = "Test", 
             Password = "Password123!" 
         };
-
         var user = new User(); // Create a new User instance
-        
-        // Setup the IMapper mock to map CreateUserDto to User
+        // Set up the IMapper mock to map CreateUserDto to User
         _mapperMock.Setup(m => m.Map<User>(dto)).Returns(user);
 
         _userManagerMock.Setup(x => x.CreateAsync(user, dto.Password)).ReturnsAsync(IdentityResult.Success);
         _userManagerMock.Setup(x => x.AddToRoleAsync(user, "UserRole")).ReturnsAsync(IdentityResult.Success);
 
+        // Act
         var result = await _userService.CreateUserAsync(dto, "UserRole");
-
+        
+        // Assert
         Assert.True(result.IsSuccess);
-        Assert.Equal(user.Id.ToString(), result.Value); // Adjusting to get user ID after creation
+        Assert.Equal(user.Id.ToString(), result.Value); 
     }
 
     [Fact]
     public async Task UpdateUserProfileAsync_ShouldReturnError_WhenUserNotFound()
     {
+        // Arrange
         var dto = new UpdateUserProfileDto { UserId = "1" };
         
         _userManagerMock.Setup(x => x.FindByIdAsync(dto.UserId)).ReturnsAsync((User)null);
-
+        // Act
         var result = await _userService.UpdateUserProfileAsync(dto);
-
+        // Assert
         AssertError(result, "user with ID 1 was not found.", ErrorType.NotFound);
     }
 
     [Fact]
     public async Task UpdateUserProfileAsync_ShouldReturnError_WhenUserNotActive()
     {
+        // Arrange
         var userId = Guid.NewGuid();
         var dto = new UpdateUserProfileDto { UserId = userId.ToString() };
         var user = new User { Id = userId , IsActive = false };
         
         _userManagerMock.Setup(x => x.FindByIdAsync(dto.UserId)).ReturnsAsync(user);
-
+        // Act
         var result = await _userService.UpdateUserProfileAsync(dto);
-
+        //Assert
         AssertError(result, $"user with ID {userId.ToString()} was not found.", ErrorType.NotFound); // Assuming forbidden for inactive users
     }
 

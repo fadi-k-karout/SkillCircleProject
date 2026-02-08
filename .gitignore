@@ -72,3 +72,23 @@ coverage*.info
 *.env
 appsettings.Development.json
 *secret*
+
+##Jetbrains Rider
+SkillCricleSolution.sln.DotSettings
+SkillCricleSolution.sln.DotSettings.user
+.idea/
+.idea/*
+# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/modules.xml
+/.idea.SkillCricleSolution.iml
+/projectSettingsUpdater.xml
+/contentModel.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+##jetbrains Rider 

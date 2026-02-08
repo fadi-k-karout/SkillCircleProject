@@ -90,7 +90,7 @@ public class AuthenticationServiceTests
         _userManagerMock.Setup(x => x.IsEmailConfirmedAsync(user)).ReturnsAsync(true);
         _userManagerMock.Setup(x => x.GetRolesAsync(user)).ReturnsAsync(roles);
         // Use explicit parameters instead of a tuple
-        _tokenGeneratorMock.Setup(x => x.GenerateToken(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<string>>()))
+        _tokenGeneratorMock.Setup(x => x.GenerateToken(It.IsAny<string>(),  It.IsAny<List<string>>()))
             .Returns(token);
 
         var result = await _authenticationService.LoginAsync(email, password);
@@ -164,7 +164,7 @@ public async Task ExternalLoginAsync_ShouldReturnSuccess_WhenUserIsCreated()
     // Setup to return the expected roles
     _userManagerMock.Setup(x => x.GetRolesAsync(It.IsAny<User>())).ReturnsAsync(roles);
     
-    _tokenGeneratorMock.Setup(x => x.GenerateToken(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<string>>()))
+    _tokenGeneratorMock.Setup(x => x.GenerateToken(It.IsAny<string>(),  It.IsAny<List<string>>()))
         .Returns(token);
 
     var result = await _authenticationService.ExternalLoginAsync(info);
