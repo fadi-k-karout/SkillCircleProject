@@ -1,0 +1,16 @@
+@model WelcomeEmailModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@Model.Subject</title>
+</head>
+<body>
+<h1>Welcome, @Model.FirstName @Model.LastName!</h1>
+<p>Thank you for signing up to our platform. We're excited to have you create content!</p>
+<p>Before you start, we need you to send your CV for verification. Please email your CV to: <a href="mailto:@Model.ContactEmail">@Model.ContactEmail</a></p>
+<p>We look forward to having you as a creator!</p>
+</body>
+</html>

@@ -80,7 +80,7 @@ namespace Web.Controllers.Identity
 			var result = await _authenticationService.ExternalLoginAsync(info);
 			var userData = result.Value;
 			var token = userData.Token;
-			var userId = userData.UserId;
+		
 			var clientDomain = _configuration["Client:Domain"];
 			
 				// Set user data cookie
@@ -94,7 +94,7 @@ namespace Web.Controllers.Identity
 				};
 
 				Response.Cookies.Append("token", token, cookieOptions);
-				Response.Cookies.Append("userId", userId, cookieOptions);// Set user data cookie
+				
 			
 
 			var returnUri = _configuration["Client:ReturnUrl"];
