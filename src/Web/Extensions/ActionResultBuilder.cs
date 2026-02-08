@@ -49,14 +49,14 @@ public class ActionResultBuilder
 
     public async Task<IActionResult> WithAuthorizationAsync(object resource, string policy)
     {
-        // Authorization logic
+     
         var authorizationResult = await _authorizationService.AuthorizeAsync(_user, resource, policy);
         if (!authorizationResult.Succeeded)
         {
             return new ForbidResult();
         }
 
-        // Convert the result to IActionResult
+      
         return _result.ToActionResult();
     }
 }

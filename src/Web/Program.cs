@@ -35,11 +35,11 @@ builder.Services.AddScoped<DatabaseSeeder>();
 var app = builder.Build();
 
 // Seed the database
-using (var scope = app.Services.CreateScope())
+/*using (var scope = app.Services.CreateScope())
 {
     var seeder = scope.ServiceProvider.GetRequiredService<DatabaseSeeder>();
     await seeder.SeedAsync();
-}
+}*/
 
 
 // Configure the HTTP request pipeline.

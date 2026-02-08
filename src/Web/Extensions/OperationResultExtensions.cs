@@ -2,16 +2,14 @@
 using Application.Common.Operation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-// For IAuthorizationService
 
-// For ClaimsPrincipal
 namespace Web.Extensions
 {
 	public static class OperationResultExtensions
 	{
 		private static  ILogger? _logger;
 
-		// You can pass the logger instance through a method if you're instantiating this in a service context
+	
 		public static void SetLogger(ILogger logger)
 		{
 			_logger = logger;
@@ -39,10 +37,15 @@ namespace Web.Extensions
 		{
 			if (result.IsSuccess)
 			{
-				return new NoContentResult();
+				if (result.SuccessType == SuccessTypes.NotModified)
+				{
+					return new NoContentResult();
+				}
+				else
+				   return new NoContentResult();
 			}
 
-			// Log the error before returning the response
+	
 			LogError(result);
 
 			return result.ErrorType switch
@@ -68,7 +71,7 @@ namespace Web.Extensions
 				}; 
 			}
 
-			// Log the error before returning the response
+		
 			LogError(result);
 
 			return result.ErrorType switch
@@ -83,7 +86,7 @@ namespace Web.Extensions
 
 		private static void LogError(OperationResult result)
 		{
-			// Ensure that the logger is initialized
+			
 			if (_logger != null && !result.IsSuccess)
 			{
 				_logger.LogError("Operation failed: {ErrorType}, {ErrorMessage}", result.ErrorType, result.ErrorMessage);
@@ -92,7 +95,7 @@ namespace Web.Extensions
 
 		private static void LogError<T>(OperationResult<T> result)
 		{
-			// Ensure that the logger is initialized
+			
 			if (_logger != null && !result.IsSuccess)
 			{
 				_logger.LogError("Operation failed: {ErrorType}, {ErrorMessage}", result.ErrorType, result.ErrorMessage);
